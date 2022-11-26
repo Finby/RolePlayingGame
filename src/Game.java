@@ -1,12 +1,17 @@
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 
 public class Game {
     Hero hero;
     Healer healer;
     Creature opponent;
-
+    static String gameMenu = """
+            1. Go to healer-trader
+            2. Go to dark forest (battle)
+            3. Exit game.
+            """;
     public Game() {
         this.hero = createHero();
         this.healer = new Healer();
@@ -18,8 +23,7 @@ public class Game {
 
     private Hero createHero() {
         // TODO: allow enter hero parameters with initial restriction hp+strength + agility = 150
-        Hero hero = new Hero("Vit", 40, 50, 60, 0, 0);
-        return hero;
+        return new Hero("Vit", 40, 50, 60, 0, 0);
     }
 
     public static void main(String[] args) {
@@ -66,17 +70,51 @@ public class Game {
     }
 
     private void begin() {
+        boolean playing = true;
+//        this.initOpponent();
+        while (playing) {
+            int input = this.makeChoice();
+            switch (input) {
+                case 1:
+                    this.healer.interact();
+                    break;
+                case 2:
+                    this.initOpponent();
+                    this.battleRound();
+                    break;
+                case 3:
+                    playing = false;
+                    break;
+            }
 
-        this.initOpponent();
-        for (int i = 0; i < 10; i++) {
-            System.out.println("Battle " + ++i );
-            this.battleRound();
-
-            hero.heal();
-            initOpponent();
         }
+
+
+//        for (int i = 0; i < 10; i++) {
+//            System.out.println("Battle " + ++i );
+//            this.battleRound();
+//
+//            hero.heal();
+//            initOpponent();
+//        }
     }
 
+    private int makeChoice() {
+        System.out.println(Game.gameMenu);
+        Scanner sc = new Scanner(System.in);
+        while (true) {
+            String s = sc.nextLine();
+            try {
+                int choice = Integer.parseInt(s);
+                if (choice != 1 && choice != 2 && choice != 3) {
+                    throw new NumberFormatException();
+                }
+                return choice;
+            } catch (NumberFormatException e) {
+                System.out.println("you have to pass integer: 1, 2 or 3");
+            }
+        }
+    }
 
 
 }

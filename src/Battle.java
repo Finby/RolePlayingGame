@@ -11,7 +11,7 @@ public class Battle extends Thread {
         // shuffle players to randomise first plying
         List<Creature> players = Arrays.asList(player1, player2);
         Collections.shuffle(players);
-
+        // to randomise first player as it has advantage of first hit
         this.player1 = players.get(0);
         this.player2 = players.get(1);
     }
