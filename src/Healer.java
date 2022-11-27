@@ -4,7 +4,7 @@ public class Healer extends Creature {
     private static final int potionCost = 5;
     private static final int potionHP = 30;
     private static final String healerMenu =
-            "1. Buy bottle of healing potion - " + Healer.potionHP + "HP - " + Healer.potionCost + " golds"
+            "1. Buy bottle of healing potion - " + Healer.potionHP + "HP - " + Healer.potionCost + " golds\n"
                     + "2. Exit";
     public Healer() {
         super("Tom", 0, 0, 0, 0, Integer.MAX_VALUE, "healer");
@@ -26,8 +26,9 @@ public class Healer extends Creature {
         // check if there is money and update hero HPs if enough
         Integer heroMoney = hero.getGold();
         if (hero.heroHasMoney(Healer.potionCost)) {
-            hero.heal(Healer.potionHP);
             hero.setGold(heroMoney - Healer.potionCost);
+            hero.heal(Healer.potionHP);
+            System.out.println(hero);
         }
     }
 

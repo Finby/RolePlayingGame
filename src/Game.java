@@ -36,6 +36,7 @@ public class Game {
     }
 
     private void battleRound() {
+        System.out.println("!!! Your opponent: " + this.opponent);
         Battle battle = new Battle(this.hero, this.opponent);
         battle.start();
         try {
@@ -43,6 +44,7 @@ public class Game {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+
         String resultMessage = "------------ game results: ";
         if (this.hero.getHp() > 0) {
             resultMessage += "hero " + this.hero.getName() + " WON";
@@ -54,22 +56,22 @@ public class Game {
             this.heroAlive = false;
         }
 
-
         System.out.println(resultMessage);
-        System.out.println(this.hero);
-        System.out.println(this.opponent);
+        System.out.println("Your state after battle: " + this.hero);
+
     }
 
     private void initOpponent() {
         // initial parameters sum = 100
         // +5% for every hero level
-        float multiplier = 0.05f * this.hero.getLevel();
-        Skeleton skeleton = new Skeleton("Skel", Math.round(90 * multiplier), Math.round(50 * multiplier), Math.round(10 * multiplier), 0, 0);
-        Goblin goblin = new Goblin("Gobby", Math.round(90 * multiplier), Math.round(30 * multiplier), Math.round(30 * multiplier), 0, 0);
+        float multiplier = 1 + 0.05f * (this.hero.getLevel() - 1);
+        Skeleton skeleton = new Skeleton("Skel", Math.round(60 * multiplier), Math.round(30 * multiplier), Math.round(10 * multiplier), 0, 0);
+        Goblin goblin = new Goblin("Gobby", Math.round(60 * multiplier), Math.round(10 * multiplier), Math.round(30 * multiplier), 0, 0);
         List<Creature> opps = Arrays.asList(skeleton, goblin);
         Collections.shuffle(opps);
 
         this.opponent = opps.get(0);
+//        System.out.println("!!! OPPONENT: " + this.opponent);
     }
 
     private void begin() {

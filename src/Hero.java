@@ -9,17 +9,18 @@ public class Hero extends Creature {
     private ArrayList<Integer> levels100;
     private Integer level;
     private static final Integer levelStep = 5;
+    private static final Integer MAX_GOLD = 8;
     private Integer hpMax; // level based HP max value to have limit for healing
 
     public Hero(String name, Integer hp, Integer strength, Integer agility, Integer experience, Integer gold) {
         super(name, hp, strength, agility, experience, gold, "hero");
         this.hpMax = this.getHp();
-        level = 0;
+        this.level = 1;
         levels100 = Stream.iterate(0, n -> n + 1)
                 .map(x -> Math.max(x * x * levelStep + (x - 1) * levelStep, 0))
                 .limit(100)
                 .collect(Collectors.toCollection(ArrayList::new));
-        System.out.println(Arrays.deepToString(levels100.toArray()));
+//        System.out.println(Arrays.deepToString(levels100.toArray()));
     }
 
     public Integer getLevel() {
@@ -30,16 +31,15 @@ public class Hero extends Creature {
         // TODO: increase stats of hero by asking player
         if (this.getExperience() > levels100.get(this.level) && level <= 100) {
             level++;
+            // randomly add 10 stat point to 3 characteristics: HP, strength, agility
+            int addHP = (new Random()).nextInt(5);
+            int addstrength = (new Random()).nextInt(5);
+            int addAgility = 10 - addHP - addstrength;
+
+            this.hpMax += addHP;  // increase hpMax, current this.hp must be restored by healing
+            this.setStrength(this.getStrength() + addstrength);
+            this.setAgility(this.getAgility() + addAgility);
         }
-        // randomly add 10 stat point to 3 characteristics: HP, strength, agility
-        int addHP = (new Random()).nextInt(5);
-        int addstrength = (new Random()).nextInt(5);
-        int addAgility = 10 - addHP - addstrength;
-
-        this.hpMax += addHP;  // increase hpMax, current this.hp must be restored by healing
-        this.setStrength(this.getStrength() + addstrength);
-        this.setAgility(this.getAgility() + addAgility);
-
     }
 
     public void earnExp() {
@@ -49,7 +49,7 @@ public class Hero extends Creature {
 
     public void earnGold() {
         Random rn = new Random();
-        Integer gold = rn.nextInt(10);
+        Integer gold = rn.nextInt(MAX_GOLD);
         this.setGold(this.getGold() + gold);
     }
 
