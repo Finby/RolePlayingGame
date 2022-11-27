@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 public class Game {
     Hero hero;
+    boolean heroAlive;
     Healer healer;
     Creature opponent;
     static String gameMenu = """
@@ -14,6 +15,7 @@ public class Game {
             """;
     public Game() {
         this.hero = createHero();
+        this.heroAlive = true;
         this.healer = new Healer();
 
         // opponent will be initialized every time before battle
@@ -49,6 +51,7 @@ public class Game {
         }
         else {
             resultMessage += this.opponent.getCreatureType() + " " + this.opponent.getName() + " WON";
+            this.heroAlive = false;
         }
 
 
@@ -59,10 +62,10 @@ public class Game {
 
     private void initOpponent() {
         // initial parameters sum = 100
-        // TODO: must depend on hero level
-        //
-        Skeleton skeleton = new Skeleton("Skel", 90, 50, 10, 0, 0);
-        Goblin goblin = new Goblin("Gobby", 90, 30, 30, 0, 0);
+        // +5% for every hero level
+        float multiplier = 0.05f * this.hero.getLevel();
+        Skeleton skeleton = new Skeleton("Skel", Math.round(90 * multiplier), Math.round(50 * multiplier), Math.round(10 * multiplier), 0, 0);
+        Goblin goblin = new Goblin("Gobby", Math.round(90 * multiplier), Math.round(30 * multiplier), Math.round(30 * multiplier), 0, 0);
         List<Creature> opps = Arrays.asList(skeleton, goblin);
         Collections.shuffle(opps);
 
@@ -72,11 +75,11 @@ public class Game {
     private void begin() {
         boolean playing = true;
 //        this.initOpponent();
-        while (playing) {
+        while (playing && this.heroAlive) {
             int input = this.makeChoice();
-            switch (input) {
+            switch (input ) {
                 case 1:
-                    this.healer.interact();
+                    this.healer.interact(this.hero);
                     break;
                 case 2:
                     this.initOpponent();

@@ -2,13 +2,15 @@ import java.util.Random;
 
 public abstract class Creature {
 
+    private static final Integer critHitChance = 5; // every 5th, 20%
+
     private String name;
     private Integer hp;
     private Integer strength;
     private Integer agility;
     private Integer experience;
     private Integer gold;
-    private String creatureType;
+    private final String creatureType;
 
     public Creature(String name, Integer hp, Integer strength, Integer agility, Integer experience, Integer gold, String creatureType) {
         this.name = name;
@@ -34,9 +36,10 @@ public abstract class Creature {
     }
 
     public int attackResult() {
-
-        if ((new Random()).nextInt(101) < this.agility * 3)
-            return this.strength;
+        if ((new Random()).nextInt(101) < this.agility * 3) {
+            Integer critChance = (new Random()).nextInt(1000);
+            return (critChance % Creature.critHitChance == 0) ? this.strength * 2 : this.strength;
+        }
 
         return 0;
     }
